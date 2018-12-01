@@ -33,11 +33,6 @@ class extractSubtitlesFromSRT:
 
     self.json_input = json_input
 
-    # # raise TypeError(f'the JSON object must be str, bytes or bytearray, '
-    # # TypeError: the JSON object must be str, bytes or bytearray, not TextIOWrapper
-    # with open(self.json_input, 'r') as jsonF:
-    #   self.srcPaths = json.loads(jsonF)
-
     jsonF = open(self.json_input)
     jsonF_str = jsonF.read()
     self.srcPaths = json.loads(jsonF_str)
@@ -46,8 +41,6 @@ class extractSubtitlesFromSRT:
   def extractSubtitles(self, srcFile, dstFile):
 
     with open(srcFile, "r") as srcf, open(dstFile, "a") as dstf:
-
-      ## lines = filter(None, (line.rstrip() for line in srcf))'
 
       for text in filter(None, (line.rstrip() for line in srcf)):
 
@@ -86,16 +79,9 @@ class extractSubtitlesFromSRT:
       self.extractSubtitlesFromPath(srcPath)
 
 
-
-
-
-
-
 if __name__ == "__main__":
 
-  # ##
   # ## Argparse Initiatives:
-  # ##
   # parser = argparse.ArgumentParser(prog='extract_subtitles_from_srt.py', prefix_chars='-+', description='Extract Captions from SRT file',
   #                                  add_help=True, allow_abbrev=True)
   #
@@ -117,7 +103,7 @@ if __name__ == "__main__":
   #   print(args)
   # elif args.source_file:
   #   print("Verbose - Path: {},\tSource File: {},\tDestination File: {}".format(args.path, args.source_file, args.destination_file))
-
+  # ##
   # #########################################################################################################
   # ## Instantiate a Class object - Begin:
   # inst_aextractSubtitlesFromSRT = extractSubtitlesFromSRT()
