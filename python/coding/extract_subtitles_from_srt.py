@@ -16,7 +16,7 @@ Description:
 Attributes:
  __version__ = "0.0.1", __project__ = coding, __author__ = Jeremy Sung, __date__ = 12/1/2018 11:54 AM, __Email__ = jsung8@gmail.com
  - Added: Read JSON files, get a list of directories and place them in a dictionary to parse all source SRT files;
-
+ - Added: Generated a dict of Subtitles directories and dump the dictionary to a JSON file.  dumpJSON_Paths()
 """
 
 import os, argparse, json
@@ -24,9 +24,8 @@ import pprint as pp
 
 class extractSubtitlesFromSRT:
 
-  def __init__(self, json_input = 'C:/staging/python/txt/do_not_remove.json'):
-
-    self.json_input = json_input
+  ## def __init__(self, json_input = 'C:/staging/python/txt/do_not_remove.json'):
+  ##   self.json_input = json_input
 
 
   def readJSON(self, json_input = 'C:/staging/python/txt/do_not_remove.json'):
@@ -36,6 +35,29 @@ class extractSubtitlesFromSRT:
     jsonF = open(self.json_input)
     jsonF_str = jsonF.read()
     self.srcPaths = json.loads(jsonF_str)
+
+
+  def dumpJSON_Paths(self, path = 'C:/38-Git', json_file = ""):
+
+    srcDirs = {}
+    listSrcDirs = []
+
+    if not os.path.exists(path):
+      return
+
+    for srcDir in os.listdir(path):
+
+      if ".zip" in srcDir or srcDir.startswith('zz'):
+        continue
+
+      if "Subtitles" in srcDir:
+        srcDir = path + '/' + srcDir
+        listSrcDirs.append(srcDir)
+
+    srcDirs["srcDirs"] = listSrcDirs
+
+    with open(json_file, 'w') as jf:
+      json.dump(srcDirs, jf)
 
 
   def extractSubtitles(self, srcFile, dstFile):
@@ -76,7 +98,11 @@ class extractSubtitlesFromSRT:
 
       ## print("Source Path: {}".format(srcPath))
 
-      self.extractSubtitlesFromPath(srcPath)
+      if ".zip" in srcPath or srcPath.startswith('zz'):
+        continue
+
+      if "Subtitles" in srcPath:
+        self.extractSubtitlesFromPath(srcPath)
 
 
 if __name__ == "__main__":
@@ -168,10 +194,19 @@ if __name__ == "__main__":
   # #           print(line)
   # ##
   #########################################################################################################
+  ##
+  ## JSON Dump (write) - Generate a JSON file which lists all subdirs with SRT files:
+  ##
+  inst_aextractSubtitlesFromSRT = extractSubtitlesFromSRT()
+
+  srcRootDir = 'C:/38-Git'
+  json_file = "C:/38-Git/srcDirs.json"
+  inst_aextractSubtitlesFromSRT.dumpJSON_Paths(srcRootDir, json_file)
+  ##
   ## Test - JSON read:
   ##
-  json_input = r'C:/staging/python/coding/src_subtitle_dirs.json'
-  inst_aextractSubtitlesFromSRT = extractSubtitlesFromSRT()
+  # json_input = r'C:/staging/python/coding/src_subtitle_dirs.json'
+  json_input = json_file
   inst_aextractSubtitlesFromSRT.readJSON(json_input)
 
   ## pp.pprint(inst_aextractSubtitlesFromSRT.srcPaths)
