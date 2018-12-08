@@ -67,31 +67,17 @@ class merge_textfiles:
                   mergedf.write(text + ' ')
 
 
-  # def extractSubtitles_Embedded_Filename_as_SectionTitle(self, srcFile, dstFile):
-  #
-  #   with open(srcFile, "r") as srcf, open(dstFile, "a") as dstf:
-  #
-  #     for text in filter(None, (line.rstrip() for line in srcf)):
-  #
-  #       if "-->" not in text and not text.isnumeric():
-  #         dstf.write(text + ' ')
-
-
   def merge_files_to_one(self, srcPath="C:/38-Git", dstPath="C:/85-Data/Subtitles"):
-    """ Consolidate all subtitles into one file in c:/10-Udacity/SUbtitles; Filename will be the name of the course;
-    Each subtitle will be separated by the name of its subtitle filename; """
+    """ Consolidate all subtitles into one file;
+     File named as Course Name; Content segmented by sections; each section titled with subtitle filename """
 
     if not os.path.exists(dstPath):
       os.makedirs(dstPath)
 
-    ## subdirs = [ srcPath + "/" + subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
-    ##               and os.path.isdir(srcPath + "/" + subdir) ]
     subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
                   and os.path.isdir(srcPath + "/" + subdir) ]
 
     for dir in subdirs:
-
-      ## srcDirPath = srcPath + '/' + dir
 
       for srcFile in os.listdir(srcPath + '/' + dir):
 
@@ -101,9 +87,6 @@ class merge_textfiles:
           dstFile = dstPath + "/" + srcCourseTitle.replace("/","_") + "_Subtitles_All.txt"
 
           srcFilePath = srcPath + '/' + dir + '/' + srcFile
-          # srcFilePath = dir + '/' + srcFile
-
-          ## print("Source: {};\n Destination: {}".format(srcFile, dstFile))
 
           with open(srcFilePath, "r") as srcf, open(dstFile, "a") as dstf:
 
@@ -117,67 +100,10 @@ class merge_textfiles:
             dstf.write("\n\n")
 
 
-
-
-      # for srcFile in os.listdir(subdir):
-        #
-        #   if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
-        #
-        #     # dstFile = dir + '/' + srcFile.strip(".srt") + r".txt"
-        #     srcFile = dir + '/' + subdir + '/' + srcFile
-        #
-        #     ## print("Source: {};\n Destination: {}".format(srcFile, dstFile))
-        #
-        #     # self.extractSubtitles(srcFile, dstFile)
-        #     with open(srcFile, "r") as srcf, open(mergedFileName, "a") as mergedf:
-        #
-        #       for text in filter(None, (line.rstrip() for line in srcf)):
-        #
-        #         if "-->" not in text and not text.isnumeric():
-        #           mergedf.write(text + ' ')
-
-
-
-    # queue = [ dir for dir in os.listdir(srcPath) if os.srcPath.isdir(dir) ]
-    # print(queue)
-
-    # for i in queue:
-    #   print(i)
-
-    # while queue:
-    #
-    #
-    #   entry = queue.
-    #
-    #   for
-    # for dir in os.listdir(Path):
-    #
-    #   ## if os.srcPath.isdir(dir) and "retrieved" in dir:
-    #   if os.srcPath.isdir(dir):
-    #     queue.append(dir)
-    #
-    #     for file in dir:
-    #
-    #       ## print("Source Path: {}".format(srcPath))
-    #
-    #       if "Subtitles" in srcPath:
-    #         self.extractSubtitlesFromPath(srcPath)
-    #
-    #
-    #     dstFile = dstPath + '/' + srcFile.strip(".srt") + r".txt"
-    #     srcFile = srcPath + '/' + srcFile
-    #
-    #     ## print("Source: {};\n Destination: {}".format(srcFile, dstFile))
-    #
-    #     self.extractSubtitles(srcFile, dstFile)
-
-
-
-
-
-
 if __name__ == "__main__":
+
   inst_merge_textfiles = merge_textfiles()
+
   # # srcPath = "C:/38-Git"
   # srcPath = "C:/zz_A1_Backup/38-Git"
   # inst_merge_textfiles.merge_files(srcPath)
