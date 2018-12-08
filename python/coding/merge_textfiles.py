@@ -22,20 +22,20 @@ class merge_textfiles:
       return
 
     # queue = deque()
-    # for dir in os.listdir(path):
+    # for dir in os.listdir(srcPath):
     #
     #   if "zz" in dir or dir.endswith(".zip"):
     #     continue
     #
-    #   sub = path + "/" + dir
+    #   sub = srcPath + "/" + dir
     #
-    #   if os.path.isdir(sub):
+    #   if os.srcPath.isdir(sub):
     #     print(sub)
     #
     #   queue.append(sub)
 
-    # queue = deque([path + "/" + dir for dir in os.listdir(path) if ("zz" not in dir or not dir.endswith(".zip")) and
-    #                os.path.isdir(path + "/" + dir)])
+    # queue = deque([srcPath + "/" + dir for dir in os.listdir(srcPath) if ("zz" not in dir or not dir.endswith(".zip")) and
+    #                os.srcPath.isdir(srcPath + "/" + dir)])
 
     queue = deque( path + "/" + dir for dir in os.listdir(path) if ("zz" not in dir or not dir.endswith(".zip")) and
                    os.path.isdir(path + "/" + dir) )
@@ -66,7 +66,67 @@ class merge_textfiles:
                 if "-->" not in text and not text.isnumeric():
                   mergedf.write(text + ' ')
 
-        # for srcFile in os.listdir(subdir):
+
+  # def extractSubtitles_Embedded_Filename_as_SectionTitle(self, srcFile, dstFile):
+  #
+  #   with open(srcFile, "r") as srcf, open(dstFile, "a") as dstf:
+  #
+  #     for text in filter(None, (line.rstrip() for line in srcf)):
+  #
+  #       if "-->" not in text and not text.isnumeric():
+  #         dstf.write(text + ' ')
+
+
+  def merge_files_to_one(self, srcPath="C:/38-Git", dstPath="C:/85-Data/Subtitles"):
+    """ Consolidate all subtitles into one file in c:/10-Udacity/SUbtitles; Filename will be the name of the course;
+    Each subtitle will be separated by the name of its subtitle filename; """
+
+    if not os.path.exists(dstPath):
+      os.makedirs(dstPath)
+
+    subdirs = [ srcPath + "/" + subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
+                  and os.path.isdir(srcPath + "/" + subdir) ]
+
+    # queue = deque(srcPath + "/" + dir for dir in os.listdir(srcPath) if ("zz" not in dir or not dir.endswith(".zip"))
+    #               and os.path.isdir(srcPath + "/" + dir))
+
+    ## pp.pprint(subdirs)
+
+    for dir in subdirs:
+
+      # if not os.path.exists(dstPath):
+      #   os.makedirs(dstPath)
+
+      for srcFile in os.listdir(dir):
+
+        if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
+
+          dstFile = dstPath + "/Subtitles_merged.txt"
+          ## dstFile = dstPath + '/' + srcFile.strip(".srt") + r".txt"
+          srcFile = dir + '/' + srcFile
+          ## srcFile = srcPath + '/' + dir + '/' + srcFile
+
+          ## print("Source: {};\n Destination: {}".format(srcFile, dstFile))
+
+          # self.extractSubtitles(srcFile, dstFile)
+          #
+          # def extractSubtitles(self, srcFile, dstFile):
+
+          with open(srcFile, "r") as srcf, open(dstFile, "a") as dstf:
+
+            dstf.write(">> {}:\n".format(srcFile))
+
+            for text in filter(None, (line.rstrip() for line in srcf)):
+
+              if "-->" not in text and not text.isnumeric():
+                dstf.write("{} ".format(text))
+
+            dstf.write("\n")
+
+
+
+
+      # for srcFile in os.listdir(subdir):
         #
         #   if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
         #
@@ -85,7 +145,7 @@ class merge_textfiles:
 
 
 
-    # queue = [ dir for dir in os.listdir(path) if os.path.isdir(dir) ]
+    # queue = [ dir for dir in os.listdir(srcPath) if os.srcPath.isdir(dir) ]
     # print(queue)
 
     # for i in queue:
@@ -99,8 +159,8 @@ class merge_textfiles:
     #   for
     # for dir in os.listdir(Path):
     #
-    #   ## if os.path.isdir(dir) and "retrieved" in dir:
-    #   if os.path.isdir(dir):
+    #   ## if os.srcPath.isdir(dir) and "retrieved" in dir:
+    #   if os.srcPath.isdir(dir):
     #     queue.append(dir)
     #
     #     for file in dir:
@@ -112,7 +172,7 @@ class merge_textfiles:
     #
     #
     #     dstFile = dstPath + '/' + srcFile.strip(".srt") + r".txt"
-    #     srcFile = path + '/' + srcFile
+    #     srcFile = srcPath + '/' + srcFile
     #
     #     ## print("Source: {};\n Destination: {}".format(srcFile, dstFile))
     #
@@ -125,8 +185,12 @@ class merge_textfiles:
 
 if __name__ == "__main__":
   inst_merge_textfiles = merge_textfiles()
-  # path = "C:/38-Git"
-  path = "C:/zz_A1_Backup/38-Git"
-  inst_merge_textfiles.merge_files(path)
+  # # srcPath = "C:/38-Git"
+  # srcPath = "C:/zz_A1_Backup/38-Git"
+  # inst_merge_textfiles.merge_files(srcPath)
+
+  srcPath = "C:/zz_A1_Backup/38-Git"
+  dstPath = "C:/85-Data/Subtitles"
+  inst_merge_textfiles.merge_files_to_one(srcPath, dstPath)
   
   
