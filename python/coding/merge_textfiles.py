@@ -84,44 +84,37 @@ class merge_textfiles:
     if not os.path.exists(dstPath):
       os.makedirs(dstPath)
 
-    subdirs = [ srcPath + "/" + subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
+    ## subdirs = [ srcPath + "/" + subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
+    ##               and os.path.isdir(srcPath + "/" + subdir) ]
+    subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
                   and os.path.isdir(srcPath + "/" + subdir) ]
-
-    # queue = deque(srcPath + "/" + dir for dir in os.listdir(srcPath) if ("zz" not in dir or not dir.endswith(".zip"))
-    #               and os.path.isdir(srcPath + "/" + dir))
-
-    ## pp.pprint(subdirs)
 
     for dir in subdirs:
 
-      # if not os.path.exists(dstPath):
-      #   os.makedirs(dstPath)
+      ## srcDirPath = srcPath + '/' + dir
 
-      for srcFile in os.listdir(dir):
+      for srcFile in os.listdir(srcPath + '/' + dir):
 
         if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
 
-          dstFile = dstPath + "/Subtitles_merged.txt"
-          ## dstFile = dstPath + '/' + srcFile.strip(".srt") + r".txt"
-          srcFile = dir + '/' + srcFile
-          ## srcFile = srcPath + '/' + dir + '/' + srcFile
+          srcCourseTitle = srcPath.strip("C:/")
+          dstFile = dstPath + "/" + srcCourseTitle.replace("/","_") + "_Subtitles_All.txt"
+
+          srcFilePath = srcPath + '/' + dir + '/' + srcFile
+          # srcFilePath = dir + '/' + srcFile
 
           ## print("Source: {};\n Destination: {}".format(srcFile, dstFile))
 
-          # self.extractSubtitles(srcFile, dstFile)
-          #
-          # def extractSubtitles(self, srcFile, dstFile):
+          with open(srcFilePath, "r") as srcf, open(dstFile, "a") as dstf:
 
-          with open(srcFile, "r") as srcf, open(dstFile, "a") as dstf:
-
-            dstf.write(">> {}:\n".format(srcFile))
+            dstf.write(">> {} > {}:\n".format(dir, srcFile))
 
             for text in filter(None, (line.rstrip() for line in srcf)):
 
               if "-->" not in text and not text.isnumeric():
                 dstf.write("{} ".format(text))
 
-            dstf.write("\n")
+            dstf.write("\n\n")
 
 
 
