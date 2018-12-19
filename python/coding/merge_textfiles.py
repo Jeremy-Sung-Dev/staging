@@ -76,18 +76,14 @@ class merge_textfiles:
     if not os.path.isdir(srcPath):
       return
 
-    ## print(os.listdir(srcPath))
-    ## Bug Fix: If srcPath contains .SRT files since it has no subdir we need to add itself (current folder) to subdirs[] so
-    ## SRT files in the srcPath root folder can also be handled.
-    ## subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
-    ##               and os.path.isdir(srcPath + "/" + subdir) ]
+    subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
+                  and os.path.isdir(srcPath + "/" + subdir) ]
 
-    subdirs = []
-    for subdir in os.listdir(srcPath):
+    # subdirs = []
+    # for subdir in os.listdir(srcPath):
+    #   if ("zz" not in subdir or not subdir.endswith(".zip")) and os.path.isdir(srcPath + "/" + subdir):
+    #     subdirs.append(subdir)
 
-      if ("zz" not in subdir or not subdir.endswith(".zip")) and os.path.isdir(srcPath + "/" + subdir):
-        subdirs.append(subdir)
-      ## subdirs.append(srcPath)  # OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect: 'C:/12_Data_Analyst/Jupyter+Notebooks+Subtitles/C:/12_Data_Analyst/Jupyter+Notebooks+Subtitles'
     ## Bug Fix: If srcPath contains .SRT files since it has no subdir we need to add itself (current folder) to subdirs[] so
     ## SRT files in the srcPath root folder can also be handled.
     subdirs.append(".")
