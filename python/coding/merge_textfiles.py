@@ -8,6 +8,8 @@ Description: Merge Subtitles Text files
 Syntax:
  > python c:\staging\python\coding\merge_textfiles.py --srcPath "C:/zz_A1_Backup/38-Git" --dstPath "C:/85-Data/Subtitles"
  > python c:\staging\python\coding\merge_textfiles.py -sp "C:\12_Data_Analyst\Jupyter+Notebooks+Subtitles" --dstPath "C:/85-Data/Subtitles"
+ > python merge_textfiles.py --srcPath "C:/12_Data_Analyst/Jupyter+Notebooks+Subtitles" --dstPath "C:/85-Data/Subtitles"
+
 
 Attributes:
   __version__ = 12/6/2018 4:13 PM, __project__ = staging, __author__ = Jeremy Sung, __email__ = jsungcoding@gmail.com
@@ -26,24 +28,8 @@ class merge_textfiles:
       print("{} does not exist.".format(path))
       return
 
-    # queue = deque()
-    # for dir in os.listdir(srcPath):
-    #
-    #   if "zz" in dir or dir.endswith(".zip"):
-    #     continue
-    #
-    #   sub = srcPath + "/" + dir
-    #
-    #   if os.srcPath.isdir(sub):
-    #     print(sub)
-    #
-    #   queue.append(sub)
-
-    # queue = deque([srcPath + "/" + dir for dir in os.listdir(srcPath) if ("zz" not in dir or not dir.endswith(".zip")) and
-    #                os.srcPath.isdir(srcPath + "/" + dir)])
-
-    queue = deque( path + "/" + dir for dir in os.listdir(path) if ("zz" not in dir or not dir.endswith(".zip")) and
-                   os.path.isdir(path + "/" + dir) )
+    queue = deque( path + "/" + dir for dir in os.listdir(path) if os.path.isdir(path + "/" + dir) and
+                   ( not dir.startswith("zz") or not dir.endswith(".zip") ) )
 
     for dir in queue:
 
@@ -76,8 +62,12 @@ class merge_textfiles:
     if not os.path.isdir(srcPath):
       return
 
-    subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
-                  and os.path.isdir(srcPath + "/" + subdir) ]
+    subdirs = [ subdir for subdir in os.listdir(srcPath) if os.path.isdir(srcPath + "/" + subdir) and
+                   ( not subdir.startswith("zz") or not subdir.endswith(".zip") ) ]
+
+    ## Bug Fix:
+    # subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
+    #               and os.path.isdir(srcPath + "/" + subdir) ]
 
     ## Bug Fix: If srcPath contains .SRT files since it has no subdir we need to add itself (current folder) to subdirs[] so
     ## SRT files in the srcPath root folder can also be handled.
@@ -86,13 +76,34 @@ class merge_textfiles:
 
     for dir in subdirs:
 
+      ## print(dir)
+
       for srcFile in os.listdir(srcPath + '/' + dir):
 
-        ## if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
+        ### Reserved - Worked:
+        # ## if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
+        # if srcFile.endswith("_en.srt") or "lang_en" in srcFile:
+        #
+        #   srcCourseTitle = srcPath.strip("C:/")
+        #   dstFile = dstPath + "/" + srcCourseTitle.replace("/","_") + "_Subtitles_en_All.txt"
+        #
+        #   srcFilePath = srcPath + '/' + dir + '/' + srcFile
+        #
+        #   with open(srcFilePath, "r") as srcf, open(dstFile, "a") as dstf:
+        #
+        #     dstf.write(">> {} > {}:\n".format(dir, srcFile))
+        #
+        #     for text in filter(None, (line.rstrip() for line in srcf)):
+        #
+        #       if "-->" not in text and not text.isnumeric():
+        #         dstf.write("{} ".format(text))
+        #
+        #     dstf.write("\n\n")
+
         if srcFile.endswith("_en.srt") or "lang_en" in srcFile:
 
           srcCourseTitle = srcPath.strip("C:/")
-          dstFile = dstPath + "/" + srcCourseTitle.replace("/","_") + "_Subtitles_All.txt"
+          dstFile = dstPath + "/" + srcCourseTitle.replace("/","_") + "_Subtitles_en_All.txt"
 
           srcFilePath = srcPath + '/' + dir + '/' + srcFile
 
@@ -106,6 +117,31 @@ class merge_textfiles:
                 dstf.write("{} ".format(text))
 
             dstf.write("\n\n")
+
+        else:
+
+          srcCourseTitle = srcPath.strip("C:/")
+          dstFile = dstPath + "/" + srcCourseTitle.replace("/", "_") + "_Subtitles_All.txt"
+
+          srcFilePath = srcPath + '/' + dir + '/' + srcFile
+
+          try:
+
+            with open(srcFilePath, "r") as srcf, open(dstFile, "a") as dstf:
+
+              dstf.write(">> {} > {}:\n".format(dir, srcFile))
+
+              for text in filter(None, (line.rstrip() for line in srcf)):
+
+                if "-->" not in text and not text.isnumeric():
+                  dstf.write("{} ".format(text))
+
+              dstf.write("\n\n")
+
+          except UnicodeDecodeError as ue:
+            print(ue.reason)
+
+
 
 
 if __name__ == "__main__":
