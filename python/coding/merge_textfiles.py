@@ -79,11 +79,6 @@ class merge_textfiles:
     subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
                   and os.path.isdir(srcPath + "/" + subdir) ]
 
-    # subdirs = []
-    # for subdir in os.listdir(srcPath):
-    #   if ("zz" not in subdir or not subdir.endswith(".zip")) and os.path.isdir(srcPath + "/" + subdir):
-    #     subdirs.append(subdir)
-
     ## Bug Fix: If srcPath contains .SRT files since it has no subdir we need to add itself (current folder) to subdirs[] so
     ## SRT files in the srcPath root folder can also be handled.
     subdirs.append(".")
