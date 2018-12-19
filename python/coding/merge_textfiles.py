@@ -5,6 +5,10 @@
 
 Description: Merge Subtitles Text files
 
+Syntax:
+ > python c:\staging\python\coding\merge_textfiles.py --srcPath "C:/zz_A1_Backup/38-Git" --dstPath "C:/85-Data/Subtitles"
+ > python c:\staging\python\coding\merge_textfiles.py -sp "C:\12_Data_Analyst\Jupyter+Notebooks+Subtitles" --dstPath "C:/85-Data/Subtitles"
+
 Attributes:
   __version__ = 12/6/2018 4:13 PM, __project__ = staging, __author__ = Jeremy Sung, __email__ = jsungcoding@gmail.com
 """
@@ -69,14 +73,32 @@ class merge_textfiles:
     if not os.path.exists(dstPath):
       os.makedirs(dstPath)
 
-    subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
-                  and os.path.isdir(srcPath + "/" + subdir) ]
+    if not os.path.isdir(srcPath):
+      return
+
+    ## print(os.listdir(srcPath))
+    ## Bug Fix: If srcPath contains .SRT files since it has no subdir we need to add itself (current folder) to subdirs[] so
+    ## SRT files in the srcPath root folder can also be handled.
+    ## subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
+    ##               and os.path.isdir(srcPath + "/" + subdir) ]
+
+    subdirs = []
+    for subdir in os.listdir(srcPath):
+
+      if ("zz" not in subdir or not subdir.endswith(".zip")) and os.path.isdir(srcPath + "/" + subdir):
+        subdirs.append(subdir)
+      ## subdirs.append(srcPath)  # OSError: [WinError 123] The filename, directory name, or volume label syntax is incorrect: 'C:/12_Data_Analyst/Jupyter+Notebooks+Subtitles/C:/12_Data_Analyst/Jupyter+Notebooks+Subtitles'
+    ## Bug Fix: If srcPath contains .SRT files since it has no subdir we need to add itself (current folder) to subdirs[] so
+    ## SRT files in the srcPath root folder can also be handled.
+    subdirs.append(".")
+
 
     for dir in subdirs:
 
       for srcFile in os.listdir(srcPath + '/' + dir):
 
-        if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
+        ## if srcFile.endswith("lang_en.srt") or "lang_en" in srcFile:
+        if srcFile.endswith("_en.srt") or "lang_en" in srcFile:
 
           srcCourseTitle = srcPath.strip("C:/")
           dstFile = dstPath + "/" + srcCourseTitle.replace("/","_") + "_Subtitles_All.txt"
@@ -110,7 +132,7 @@ if __name__ == "__main__":
   ## parser.add_argument("-V", "--verbose", action="store_true")
   parser.add_argument("-q", "--quiet", action="store_true")
   ## Positional:
-  # parser.add_argument('bar', help='positional bar')
+  ## parser.add_argument('bar', help='positional bar')
   ## Usage:  C:\staging\python\coding>python extract_subtitles_from_srt.py -p c:/lab
 
   args = parser.parse_args()
@@ -134,6 +156,7 @@ if __name__ == "__main__":
   ## Extract SRTs and Merge to a file in destination for a course.
   ## CLI : C:\Users\Jeremy Sung>python c:\staging\python\coding\merge_textfiles.py --srcPath "C:/zz_A1_Backup/38-Git" --dstPath "C:/85-Data/Subtitles"
   ##
+  ## print(args.srcPath, args.dstPath)
   srcPath = args.srcPath if args.srcPath else "C:/zz_A1_Backup/38-Git1"
   dstPath = args.dstPath if args.dstPath else "C:/85-Data/Subtitles1"
   inst_merge_textfiles.merge_files_to_one(srcPath, dstPath)
