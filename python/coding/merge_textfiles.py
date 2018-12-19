@@ -62,8 +62,17 @@ class merge_textfiles:
     if not os.path.isdir(srcPath):
       return
 
-    subdirs = [ subdir for subdir in os.listdir(srcPath) if os.path.isdir(srcPath + "/" + subdir) and
-                   ( not subdir.startswith("zz") or not subdir.endswith(".zip") ) ]
+    # subdirs = [ subdir for subdir in os.listdir(srcPath) if os.path.isdir(srcPath + "/" + subdir) and not
+    #                ( subdir.startswith("zz") and subdir.endswith(".zip") ) ]
+    subdirs = []
+    for subdir in os.listdir(srcPath):
+
+      if os.path.isdir(srcPath + "/" + subdir):
+
+        if subdir.startswith("zz") or subdir.endswith(".zip"):
+          continue
+
+        subdirs.append(subdir)
 
     ## Bug Fix:
     # subdirs = [ subdir for subdir in os.listdir(srcPath) if ("zz" not in subdir or not subdir.endswith(".zip"))
@@ -140,6 +149,9 @@ class merge_textfiles:
 
           except UnicodeDecodeError as ue:
             print(ue.reason)
+
+          except PermissionError as pe:
+            print(pe.strerror)
 
 
 
