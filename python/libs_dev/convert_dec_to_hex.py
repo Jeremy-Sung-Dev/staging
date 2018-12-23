@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" convert_dec_to_hex.py
+""" convert_dec_to_hex.py  -- Still working on it 12/22/2018 
 
 Description:
   From Lee to Everyone:  08:02 PM
@@ -20,45 +20,39 @@ import pprint as pp
 class convert_dec_to_hex:
 
   def __init__(self):
-    ## self.hex = {i: i for i in range(10)}
-    ## self.hex = { i : i for i in range(10) }.update( { 10:"A", 11:"B", 12:"C", 13:"D", 14:"E", 15:"F" } ) ## None
-    ## self.hex = dict( {i: i for i in range(10)}, **{10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F"} ) ## TypeError: keywords must be strings
-    ## self.hex = dict( { i: i for i in range(10) }, **{"10": "A", "11": "B", "12": "C", "13": "D", "14": "E", "15": "F"})  ## worked but not useful
     self.hex = { **{i: i for i in range(10)}, **{10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F"} }
 
   def convert_dec_to_hex(self, num):
 
     res = []
     print("Number comes in: {}".format(num))
-    ## print("Number / 16 comes in: {}".format(num/16))  ## Number / 16 comes in: 1.0625
-    ## print("Number / 16 comes in: {}".format(num >> 4))  ## Worked: return 1, i.e. 17 / 16
 
-    ## if (num / 16) < 16:
-    if (num >> 4) < 16:
-      res.append( self.hex[ num % 16 ] )
-      res.append( self.hex[ num >> 4 ] )
+    res.append(self.hex[num % 16])
 
-    else:
+    if num < 16:
+      return "".join(res)
 
-      print("num > 16: {}".format(num >> 4))
+    while num >= 16:
+      print("num >> 4 : {}".format(num >> 4))
+      print("num % 16 : {}".format(num % 16))
 
-    #   res.append(self.hex[num % 16])
-    #   num = num / 16
-    #   print("num / 16: {}".format(num))
+    #   # if (num >> 4) == 0:
+    #   #   res.append("F")
+    #   #
+    #   #   num = num % 16
+    #   #
+    #   # if (num >> 4) < 16:
+    #   #   print("self.hex[ num % 16 ] : {}".format(self.hex[ num % 16 ]))
+    #   #   # res.append( self.hex[ num % 16 ])
+    #     # res = res.reverse()
+    #     # return "".join(res.reverse())
     #
-    #   while (num / 16) >= 16:
+    #   else:
+    #     res.append( self.hex( num % 16 ))
+    #     num = num >> 4
     #
-    #     res.append(self.hex[num % 16])
-    #     num = num / 16
-    #
-    #     if ( num / 16 ) < 16:
-    #       res.append(self.hex[num % 16])
-    #     else:
-    #       num = num / 16
-    #       continue
-    #
-    print("".join[res])
-    return res
+    # print("".join[res])
+    # return res
 
 
 
